@@ -208,7 +208,13 @@ function renderLine(text, startX, startY) {
             continue;
         }
         
-        // Apply variation to strokes
+        // Normalize strokes to 0-1 range based on character bounds
+        const normalizedStrokes = StrokeProcessor.normalize(
+            JSON.parse(JSON.stringify(charData.strokes)),
+            charData.bounds
+        );
+        
+        // Apply variation to normalized strokes
         const variationConfig = {
             positionJitter: config.variation * 0.01,
             rotationRange: config.variation * 1.5,
@@ -216,16 +222,16 @@ function renderLine(text, startX, startY) {
         };
         
         const variedStrokes = StrokeProcessor.applyVariation(
-            JSON.parse(JSON.stringify(charData.strokes)),
+            normalizedStrokes,
             variationConfig
         );
         
         // Render character
-        const charSVG = renderCharacter(variedStrokes, xPosition, startY, config.fontSize);
+        const charSVG = renderCharacter(variedStrokes, xPosition, startY, config.fontSize, charData.bounds);
         svgContent += charSVG;
         
-        // Calculate character width for spacing
-        const charWidth = charData.bounds.width * config.fontSize;
+        // Calculate character width for spacing (use normalized width)
+        const charWidth = config.fontSize * 0.6; // Approximate width based on font size
         xPosition += charWidth + config.letterSpacing;
     }
     
@@ -239,10 +245,11 @@ function renderLine(text, startX, startY) {
     };
 }
 
-function renderCharacter(strokes, x, y, size) {
+function renderCharacter(strokes, x, y, size, bounds) {
     let svg = `  <g transform="translate(${x.toFixed(2)}, ${y.toFixed(2)})">\n`;
     
     // Generate paths with pressure-based width
+    // Strokes are already normalized to 0-1 range
     strokes.forEach(stroke => {
         if (!stroke.points || stroke.points.length < 2) return;
         
@@ -250,7 +257,7 @@ function renderCharacter(strokes, x, y, size) {
         const avgPressure = stroke.points.reduce((sum, p) => sum + (p.pressure || 0.5), 0) / stroke.points.length;
         const strokeWidth = StrokeProcessor.mapPressureToWidth(avgPressure, 1.5, 3);
         
-        // Generate path data
+        // Generate path data (normalized coordinates scaled by size)
         const pathData = generatePathData(stroke.points, size);
         
         svg += `    <path d="${pathData}" fill="none" stroke="${config.strokeColor}" stroke-width="${strokeWidth.toFixed(2)}" stroke-linecap="round" stroke-linejoin="round"/>\n`;
