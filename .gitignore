@@ -1,0 +1,16 @@
+# Dependencies
+lib/
+
+# Local storage test files
+*.json
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/
