@@ -81,7 +81,7 @@ class StrokeProcessor {
             const last = pts[pts.length - 1];
 
             for (let i = 1; i < pts.length - 1; i++) {
-                const dist = this.perpendicularDistance(pts[i], first, last);
+                const dist = StrokeProcessor.perpendicularDistance(pts[i], first, last);
                 if (dist > maxDist) {
                     maxDist = dist;
                     maxIndex = i;

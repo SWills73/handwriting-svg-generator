@@ -346,7 +346,7 @@ function copySVGToClipboard() {
     }).catch(err => {
         console.error('Error copying to clipboard:', err);
         
-        // Fallback: select the text in code preview
+        // Fallback: select the text in code preview for manual copying
         const codeEl = document.getElementById('svgCode');
         const range = document.createRange();
         range.selectNodeContents(codeEl);
@@ -354,11 +354,6 @@ function copySVGToClipboard() {
         selection.removeAllRanges();
         selection.addRange(range);
         
-        try {
-            document.execCommand('copy');
-            alert('SVG code selected. Press Ctrl+C to copy.');
-        } catch (e) {
-            alert('Could not copy to clipboard. Please manually select and copy the SVG code.');
-        }
+        alert('Could not copy automatically. The SVG code is now selected. Press Ctrl+C (or Cmd+C) to copy.');
     });
 }
