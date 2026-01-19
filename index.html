@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handwriting SVG Generator</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="render-page">
+    <div class="container">
+        <header>
+            <h1>📝 Handwriting SVG Generator</h1>
+            <p>Type text to render in your handwriting style as editable SVG</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <button id="loadData" class="primary">Load Handwriting Data</button>
+                <input type="file" id="dataFileInput" accept=".json" style="display: none;">
+                <span id="dataStatus">No data loaded</span>
+            </div>
+
+            <div class="control-group">
+                <label for="textInput">Your Text:</label>
+                <textarea id="textInput" rows="3" placeholder="Type your text here...">Hello World</textarea>
+            </div>
+
+            <div class="control-group">
+                <label for="fontSize">Size:</label>
+                <input type="range" id="fontSize" min="20" max="200" value="60">
+                <span id="fontSizeValue">60</span>
+                
+                <label for="letterSpacing">Spacing:</label>
+                <input type="range" id="letterSpacing" min="-10" max="50" value="5">
+                <span id="letterSpacingValue">5</span>
+            </div>
+
+            <div class="control-group">
+                <label for="lineHeight">Line Height:</label>
+                <input type="range" id="lineHeight" min="1" max="3" step="0.1" value="1.5">
+                <span id="lineHeightValue">1.5</span>
+
+                <label for="variation">Variation:</label>
+                <input type="range" id="variation" min="0" max="10" value="2">
+                <span id="variationValue">2</span>
+            </div>
+
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="connectCursive" checked>
+                    Connect Cursive Letters
+                </label>
+            </div>
+        </div>
+
+        <div id="svgContainer"></div>
+
+        <div class="export-section">
+            <button id="renderBtn" class="primary">Render Text</button>
+            <button id="exportSVG" class="primary">💾 Download SVG</button>
+            <button id="copySVG" class="secondary">📋 Copy SVG Code</button>
+        </div>
+
+        <div class="code-preview">
+            <h3>SVG Preview</h3>
+            <pre><code id="svgCode"><!-- SVG code will appear here --></code></pre>
+        </div>
+    </div>
+
+    <script src="js/font-data.js"></script>
+    <script src="js/stroke-processor.js"></script>
+    <script src="js/svg-generator.js"></script>
+    <script src="js/text-renderer.js"></script>
+</body>
+</html>
