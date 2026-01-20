@@ -218,8 +218,8 @@ function startDrawing(x, y) {
         startTime: Date.now()
     };
     // Use provided coordinates if available, otherwise use mouseX/mouseY
-    const drawX = x !== undefined ? x : mouseX;
-    const drawY = y !== undefined ? y : mouseY;
+    const drawX = x ?? mouseX;
+    const drawY = y ?? mouseY;
     addPoint(drawX, drawY);
 }
 
