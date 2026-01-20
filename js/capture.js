@@ -42,6 +42,20 @@ function setup() {
     canvas.touchStarted(handleTouchStart);
     canvas.touchMoved(handleTouchMove);
     canvas.touchEnded(handleTouchEnd);
+    
+    // Set canvas style to prevent scrolling/zooming during drawing
+    const canvasElement = canvas.elt;
+    canvasElement.style.touchAction = 'none';
+    canvasElement.style.userSelect = 'none';
+    canvasElement.style.webkitUserSelect = 'none';
+    
+    // Add pointer event handlers for pen/touch support
+    canvasElement.addEventListener('pointerdown', handlePointerDown);
+    canvasElement.addEventListener('pointermove', handlePointerMove);
+    canvasElement.addEventListener('pointerup', handlePointerEnd);
+    canvasElement.addEventListener('pointercancel', handlePointerEnd);
+    canvasElement.addEventListener('pointerleave', handlePointerEnd);
+    
     background(255);
     
     // Initialize
@@ -146,7 +160,10 @@ function mouseReleased() {
 }
 
 function handleTouchStart() {
-    startDrawing();
+    if (touches.length > 0) {
+        const touch = touches[0];
+        startDrawing(touch.x, touch.y);
+    }
     return false; // Prevent default
 }
 
@@ -165,14 +182,45 @@ function handleTouchEnd() {
     return false; // Prevent default
 }
 
+// Pointer event handlers for pen/touch support
+function handlePointerDown(event) {
+    event.preventDefault();
+    const rect = event.target.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    if (x >= 0 && x <= canvasWidth && y >= 0 && y <= canvasHeight) {
+        startDrawing(x, y);
+    }
+}
+
+function handlePointerMove(event) {
+    if (!isDrawing) return;
+    event.preventDefault();
+    const rect = event.target.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    continueDrawing(x, y);
+}
+
+function handlePointerEnd(event) {
+    event.preventDefault();
+    if (isDrawing) {
+        endDrawing();
+    }
+}
+
 // Drawing logic
-function startDrawing() {
+function startDrawing(x, y) {
     isDrawing = true;
     currentStroke = {
         points: [],
         startTime: Date.now()
     };
-    addPoint(mouseX, mouseY);
+    // Use provided coordinates if available, otherwise use mouseX/mouseY
+    const drawX = x !== undefined ? x : mouseX;
+    const drawY = y !== undefined ? y : mouseY;
+    addPoint(drawX, drawY);
 }
 
 function continueDrawing(x, y) {
