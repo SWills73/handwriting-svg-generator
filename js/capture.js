@@ -44,6 +44,19 @@ function setup() {
     canvas.touchEnded(handleTouchEnd);
     background(255);
     
+    // Prevent touch scrolling and zooming on canvas
+    const canvasElement = canvas.elt;
+    canvasElement.style.touchAction = 'none';
+    canvasElement.style.userSelect = 'none';
+    canvasElement.style.webkitUserSelect = 'none';
+    
+    // Add pointer event handlers for better pen/touch support
+    canvasElement.addEventListener('pointerdown', handlePointerDown);
+    canvasElement.addEventListener('pointermove', handlePointerMove);
+    canvasElement.addEventListener('pointerup', handlePointerUp);
+    canvasElement.addEventListener('pointercancel', handlePointerCancel);
+    canvasElement.addEventListener('pointerleave', handlePointerLeave);
+    
     // Initialize
     fontData = new FontData();
     initCharacterSet();
@@ -146,7 +159,10 @@ function mouseReleased() {
 }
 
 function handleTouchStart() {
-    startDrawing();
+    if (touches.length > 0) {
+        const touch = touches[0];
+        startDrawingAt(touch.x, touch.y);
+    }
     return false; // Prevent default
 }
 
@@ -165,6 +181,45 @@ function handleTouchEnd() {
     return false; // Prevent default
 }
 
+// Pointer event handlers for pen/touch with better control
+function handlePointerDown(e) {
+    e.preventDefault();
+    const rect = e.target.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    startDrawingAt(x, y);
+}
+
+function handlePointerMove(e) {
+    if (!isDrawing) return;
+    e.preventDefault();
+    const rect = e.target.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    continueDrawing(x, y);
+}
+
+function handlePointerUp(e) {
+    if (isDrawing) {
+        e.preventDefault();
+        endDrawing();
+    }
+}
+
+function handlePointerCancel(e) {
+    if (isDrawing) {
+        e.preventDefault();
+        endDrawing();
+    }
+}
+
+function handlePointerLeave(e) {
+    if (isDrawing) {
+        e.preventDefault();
+        endDrawing();
+    }
+}
+
 // Drawing logic
 function startDrawing() {
     isDrawing = true;
@@ -173,6 +228,15 @@ function startDrawing() {
         startTime: Date.now()
     };
     addPoint(mouseX, mouseY);
+}
+
+function startDrawingAt(x, y) {
+    isDrawing = true;
+    currentStroke = {
+        points: [],
+        startTime: Date.now()
+    };
+    addPoint(x, y);
 }
 
 function continueDrawing(x, y) {
