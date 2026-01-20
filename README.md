@@ -23,7 +23,7 @@ Convert your handwriting into editable SVG graphics! This tool captures your nat
 
 #### Step 1: Capture Your Handwriting
 
-1. Open `capture.html` in your web browser
+1. Open [capture.html](capture.html) in your web browser (double-click locally or use a simple local server)
 2. Draw each character in the canvas area
 3. Use the controls:
    - **Save Character**: Save the current character
@@ -35,7 +35,7 @@ Convert your handwriting into editable SVG graphics! This tool captures your nat
 
 #### Step 2: Generate Text
 
-1. Open `index.html` in your web browser
+1. Open [index.html](index.html) in your web browser (double-click locally or use a simple local server)
 2. Click **Load Handwriting Data** and select your exported JSON file
 3. Type your desired text in the text area
 4. Adjust parameters:
@@ -98,8 +98,12 @@ Handwriting data is stored as JSON:
   },
   "characters": {
     "a": {
-      "strokes": [/* array of stroke objects */],
-      "bounds": {/* bounding box */},
+      "strokes": [
+        /* array of stroke objects */
+      ],
+      "bounds": {
+        /* bounding box */
+      },
       "baseline": 0,
       "timestamp": "ISO-8601-timestamp"
     }
@@ -170,19 +174,23 @@ This project is open source and available for personal and commercial use.
 ## 🐛 Troubleshooting
 
 **Canvas not appearing on capture page:**
+
 - Check browser console for p5.js loading errors
 - Verify internet connection or use local p5.js copy
 - Ensure JavaScript is enabled
 
 **Characters appear too large/small:**
+
 - Adjust the Size slider on the render page
 - Characters are normalized during capture for consistency
 
 **Some characters missing in output:**
+
 - Those characters weren't captured - return to capture.html
 - Check character grid to see which are captured (green)
 
 **SVG looks pixelated:**
+
 - SVGs are vector graphics - they scale infinitely
 - Try opening in a dedicated SVG viewer or editor
 
