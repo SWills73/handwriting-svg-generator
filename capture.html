@@ -1,77 +1,96 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
     <title>Handwriting Capture Tool</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
-</head>
-<body class="capture-page">
+  </head>
+  <body class="capture-page">
     <div class="container">
-        <header>
-            <h1>✍️ Handwriting Capture</h1>
-            <p>Draw each character naturally. The tool captures your strokes, pressure, and timing.</p>
-        </header>
+      <header>
+        <h1>✍️ Handwriting Capture</h1>
+        <p>
+          Draw each character naturally. The tool captures your strokes,
+          pressure, and timing.
+        </p>
+      </header>
 
-        <div class="controls">
-            <div class="control-group">
-                <label for="charInput">Current Character:</label>
-                <input type="text" id="charInput" maxlength="1" value="a" placeholder="a">
-                <button id="nextChar">Next →</button>
-            </div>
-            
-            <div class="control-group">
-                <button id="clearBtn" class="secondary">Clear Canvas</button>
-                <button id="undoBtn" class="secondary">Undo Stroke</button>
-                <button id="saveChar" class="primary">Save Character</button>
-            </div>
-
-            <div class="control-group">
-                <label>
-                    <input type="checkbox" id="showGrid" checked>
-                    Show Grid
-                </label>
-                <label>
-                    <input type="checkbox" id="showPressure" checked>
-                    Pressure Sensitivity
-                </label>
-            </div>
+      <div class="controls">
+        <div class="control-group">
+          <label for="charInput">Current Character:</label>
+          <input
+            type="text"
+            id="charInput"
+            maxlength="1"
+            value="a"
+            placeholder="a"
+          />
+          <button id="nextChar">Next →</button>
         </div>
 
-        <div id="canvasContainer"></div>
-
-        <div class="info-panel">
-            <div class="stat">
-                <span class="label">Strokes:</span>
-                <span id="strokeCount">0</span>
-            </div>
-            <div class="stat">
-                <span class="label">Captured:</span>
-                <span id="capturedCount">0</span> / <span id="totalChars">62</span>
-            </div>
-            <div class="stat">
-                <span class="label">Progress:</span>
-                <div class="progress-bar">
-                    <div id="progressFill"></div>
-                </div>
-            </div>
+        <div class="control-group">
+          <button id="clearBtn" class="secondary">Clear Canvas</button>
+          <button id="undoBtn" class="secondary">Undo Stroke</button>
+          <button id="saveChar" class="primary">Save Character</button>
         </div>
 
-        <div class="character-set">
-            <h3>Character Set</h3>
-            <div id="charGrid"></div>
+        <div class="control-group">
+          <label>
+            <input type="checkbox" id="showGrid" checked />
+            Show Guidelines
+          </label>
+          <label>
+            <input type="checkbox" id="showPressure" checked />
+            Pressure Sensitivity
+          </label>
         </div>
+      </div>
 
-        <div class="export-section">
-            <button id="exportJSON" class="primary">📥 Export Handwriting Data</button>
-            <button id="importJSON" class="secondary">📤 Import Data</button>
-            <input type="file" id="fileInput" accept=".json" style="display: none;">
+      <div id="canvasContainer"></div>
+
+      <div class="info-panel">
+        <div class="stat">
+          <span class="label">Strokes:</span>
+          <span id="strokeCount">0</span>
         </div>
+        <div class="stat">
+          <span class="label">Captured:</span>
+          <span id="capturedCount">0</span> / <span id="totalChars">62</span>
+        </div>
+        <div class="stat">
+          <span class="label">Progress:</span>
+          <div class="progress-bar">
+            <div id="progressFill"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="character-set">
+        <h3>Character Set</h3>
+        <div id="charGrid"></div>
+      </div>
+
+      <div class="export-section">
+        <button id="exportJSON" class="primary">
+          📥 Export Handwriting Data
+        </button>
+        <button id="importJSON" class="secondary">📤 Import Data</button>
+        <input
+          type="file"
+          id="fileInput"
+          accept=".json"
+          style="display: none"
+        />
+      </div>
     </div>
 
     <script src="js/font-data.js"></script>
     <script src="js/stroke-processor.js"></script>
     <script src="js/capture.js"></script>
-</body>
+  </body>
 </html>
