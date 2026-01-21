@@ -11,14 +11,15 @@ let currentStroke = null;
 let isDrawing = false;
 let showGuides = true;
 let showPressure = true;
-let canvasWidth = 800;
-let canvasHeight = 600;
+let canvasWidth = 450;
+let canvasHeight = 350;
 
 // Guideline metrics (ascender through descender) to preserve relative scale
 const GUIDELINE_METRICS = {
-  ascender: 0.10, // top of ascenders
-  xHeight: 0.42, // typical lowercase height
-  baseline: 0.58, // writing baseline
+  ascender: 0.12, // top of ascenders
+  capHeight: 0.2, // capital letter height
+  xHeight: 0.46, // typical lowercase height
+  baseline: 0.66, // writing baseline
   descender: 0.82, // bottom of descenders
 };
 
@@ -101,6 +102,7 @@ function draw() {
 // Draw handwriting guidelines: ascender, x-height, baseline, descender
 function drawGuidelines() {
   const ascY = GUIDELINE_METRICS.ascender * canvasHeight;
+  const capHeightY = GUIDELINE_METRICS.capHeight * canvasHeight;
   const xHeightY = GUIDELINE_METRICS.xHeight * canvasHeight;
   const baselineY = GUIDELINE_METRICS.baseline * canvasHeight;
   const descY = GUIDELINE_METRICS.descender * canvasHeight;
@@ -112,6 +114,11 @@ function drawGuidelines() {
   stroke(180, 200, 255);
   drawingContext.setLineDash([10, 8]);
   line(0, ascY, canvasWidth, ascY);
+
+  // Cap height line (dashed)
+  stroke(160, 180, 255);
+  drawingContext.setLineDash([10, 8]);
+  line(0, capHeightY, canvasWidth, capHeightY);
 
   // x-height line (dotted)
   drawingContext.setLineDash([5, 8]);
@@ -138,6 +145,7 @@ function drawGuidelines() {
   textSize(12);
   textAlign(LEFT, BOTTOM);
   text("Ascender", 10, ascY - 4);
+  text("Cap Height", 10, capHeightY - 4);
   text("x-height", 10, xHeightY - 4);
   text("Baseline", 10, baselineY - 4);
   text("Descender", 10, descY - 4);
