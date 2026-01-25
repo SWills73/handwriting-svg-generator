@@ -233,6 +233,30 @@ class StrokeProcessor {
   }
 
   /**
+   * Extract entry/exit connector points for cursive joining.
+   * Strokes should already be normalized to 0-1 space.
+   * @param {Array} strokes - Normalized strokes
+   * @returns {Object|null} {entry:{x,y}, exit:{x,y}, width}
+   */
+  static extractConnectors(strokes) {
+    if (!strokes || strokes.length === 0) return null;
+
+    const firstStroke = strokes[0];
+    const lastStroke = strokes[strokes.length - 1];
+    if (!firstStroke.points?.length || !lastStroke.points?.length) return null;
+
+    const entry = firstStroke.points[0];
+    const exit = lastStroke.points[lastStroke.points.length - 1];
+    const bounds = StrokeProcessor.calculateBounds(strokes);
+
+    return {
+      entry: { x: entry.x, y: entry.y },
+      exit: { x: exit.x, y: exit.y },
+      width: bounds.width || 0,
+    };
+  }
+
+  /**
    * Calculate stroke metrics
    * @param {Object} stroke - Stroke object
    * @returns {Object} Metrics {length, duration, avgSpeed}

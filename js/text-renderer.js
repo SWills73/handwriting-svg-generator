@@ -194,6 +194,7 @@ function renderLine(text, startX, startY) {
   let xPosition = startX;
   let svgContent = "";
   const missingChars = [];
+  let prevConnector = null;
 
   for (let i = 0; i < text.length; i++) {
     const char = text[i];
@@ -240,6 +241,7 @@ function renderLine(text, startX, startY) {
       startY,
       config.fontSize,
       charData,
+      prevConnector,
     );
     svgContent += charSVG;
 
@@ -247,6 +249,8 @@ function renderLine(text, startX, startY) {
     const normalizedBounds = StrokeProcessor.calculateBounds(variedStrokes);
     const normalizedWidth = normalizedBounds.width || 0.6; // fallback
     const charWidth = normalizedWidth * config.fontSize;
+    // Update connector info for next glyph
+    prevConnector = StrokeProcessor.extractConnectors(variedStrokes);
     xPosition += charWidth + config.letterSpacing;
   }
 
@@ -260,7 +264,7 @@ function renderLine(text, startX, startY) {
   };
 }
 
-function renderCharacter(strokes, x, baselineY, size, charData) {
+function renderCharacter(strokes, x, baselineY, size, charData, prevConnector) {
   const baselineNorm = getBaselineNorm(charData);
   const yOffset = baselineY - baselineNorm * size;
 
@@ -268,7 +272,7 @@ function renderCharacter(strokes, x, baselineY, size, charData) {
 
   // Generate paths with pressure-based width
   // Strokes are already normalized to 0-1 range
-  strokes.forEach((stroke) => {
+  strokes.forEach((stroke, index) => {
     if (!stroke.points || stroke.points.length < 2) return;
 
     // Calculate average pressure
@@ -279,6 +283,19 @@ function renderCharacter(strokes, x, baselineY, size, charData) {
 
     // Generate path data (normalized coordinates scaled by size)
     const pathData = generatePathData(stroke.points, size);
+
+    // If cursive is enabled and we have a previous connector, draw a joining line
+    if (config.connectCursive && prevConnector && index === 0) {
+      const startPoint = stroke.points[0];
+      const joinPath = `M ${(prevConnector.exit.x * size).toFixed(
+        2,
+      )} ${(prevConnector.exit.y * size + (baselineY - yOffset)).toFixed(
+        2,
+      )} L ${(startPoint.x * size).toFixed(2)} ${(startPoint.y * size).toFixed(
+        2,
+      )}`;
+      svg += `    <path d="${joinPath}" fill="none" stroke="${config.strokeColor}" stroke-width="${strokeWidth.toFixed(2)}" stroke-linecap="round" stroke-linejoin="round"/>\n`;
+    }
 
     svg += `    <path d="${pathData}" fill="none" stroke="${config.strokeColor}" stroke-width="${strokeWidth.toFixed(2)}" stroke-linecap="round" stroke-linejoin="round"/>\n`;
   });
