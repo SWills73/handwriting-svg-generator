@@ -25,7 +25,21 @@ const GUIDELINE_METRICS = {
 
 // Character + pair set
 const CHAR_SET = [];
-const PAIR_SET = ["th", "ch", "sh", "wh", "ph", "qu", "oo", "ee", "ll", "tt"];
+const PAIR_SET = [
+  "th",
+  "ch",
+  "sh",
+  "wh",
+  "ph",
+  "qu",
+  "oo",
+  "ee",
+  "ll",
+  "tt",
+  "or",
+  "br",
+  "st",
+];
 
 // Initialize character set
 function initCharacterSet() {

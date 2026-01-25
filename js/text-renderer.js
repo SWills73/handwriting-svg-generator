@@ -208,6 +208,7 @@ function renderLine(text, startX, startY) {
     // Handle space
     if (glyphKey === " ") {
       xPosition += config.fontSize * 0.3;
+      prevConnector = null; // break connections across word boundaries
       i += step;
       continue;
     }
@@ -222,6 +223,9 @@ function renderLine(text, startX, startY) {
       i += step;
       continue;
     }
+
+    const isCapital =
+      glyphKey.length === 1 && glyphKey.toUpperCase() === glyphKey && glyphKey.toLowerCase() !== glyphKey;
 
     // Normalize strokes to 0-1 range based on character bounds
     const normalizedStrokes = StrokeProcessor.normalize(
@@ -246,7 +250,9 @@ function renderLine(text, startX, startY) {
     const yOffset = startY - baselineNorm * config.fontSize;
 
     // Extract connectors once per character
-    const connector = StrokeProcessor.extractConnectors(variedStrokes);
+    const connector = !isCapital
+      ? StrokeProcessor.extractConnectors(variedStrokes)
+      : null;
 
     // If cursive is enabled and we have a previous connector, draw a joining line in absolute space
     if (config.connectCursive && prevConnector && connector?.entry) {
@@ -271,7 +277,7 @@ function renderLine(text, startX, startY) {
     const normalizedWidth = normalizedBounds.width || 0.6; // fallback
     const charWidth = normalizedWidth * config.fontSize;
     // Update connector info for next glyph (store absolute exit position)
-    if (connector) {
+    if (connector && !isCapital) {
       const exitAbsX = xPosition + connector.exit.x * config.fontSize;
       const exitAbsY = yOffset + connector.exit.y * config.fontSize;
       // Approximate stroke width from first stroke for consistency
