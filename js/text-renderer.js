@@ -198,22 +198,29 @@ function renderLine(text, startX, startY) {
   const missingChars = [];
   let prevConnector = null;
 
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i];
+  for (let i = 0; i < text.length; ) {
+    const pairKey = text.slice(i, i + 2);
+    const singleKey = text[i];
+    const usePair =
+      pairKey.length === 2 && fontData.hasCharacter && fontData.hasCharacter(pairKey);
+    const glyphKey = usePair ? pairKey : singleKey;
+    const step = usePair ? 2 : 1;
 
     // Handle space
-    if (char === " ") {
+    if (glyphKey === " ") {
       xPosition += config.fontSize * 0.3;
+      i += step;
       continue;
     }
 
     // Get character data
-    const charData = fontData.getCharacter(char);
+    const charData = fontData.getCharacter(glyphKey);
 
     if (!charData) {
       // Character not captured - skip or use placeholder
-      missingChars.push(char);
+      missingChars.push(glyphKey);
       xPosition += config.fontSize * 0.5;
+      i += step;
       continue;
     }
 
@@ -284,6 +291,7 @@ function renderLine(text, startX, startY) {
       prevConnector = null;
     }
     xPosition += charWidth + config.letterSpacing;
+    i += step;
   }
 
   if (missingChars.length > 0) {
