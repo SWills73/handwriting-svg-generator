@@ -224,8 +224,7 @@ function renderLine(text, startX, startY) {
       continue;
     }
 
-    const isCapital =
-      glyphKey.length === 1 && glyphKey.toUpperCase() === glyphKey && glyphKey.toLowerCase() !== glyphKey;
+    const isCapital = /^[A-Z]$/.test(glyphKey);
 
     // Normalize strokes to 0-1 range based on character bounds
     const normalizedStrokes = StrokeProcessor.normalize(
@@ -277,7 +276,7 @@ function renderLine(text, startX, startY) {
     const normalizedWidth = normalizedBounds.width || 0.6; // fallback
     const charWidth = normalizedWidth * config.fontSize;
     // Update connector info for next glyph (store absolute exit position)
-    if (connector && !isCapital) {
+    if (connector) {
       const exitAbsX = xPosition + connector.exit.x * config.fontSize;
       const exitAbsY = yOffset + connector.exit.y * config.fontSize;
       // Approximate stroke width from first stroke for consistency
