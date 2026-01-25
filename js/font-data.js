@@ -21,12 +21,13 @@ class FontData {
    * @param {number} baseline - Baseline position
    * @param {Object} [metrics] - Optional capture metrics (ascender, descender, xHeight, emHeight, captureWidth)
    */
-  setCharacter(char, strokes, bounds, baseline, metrics) {
+   setCharacter(char, strokes, bounds, baseline, metrics, connectors) {
     this.characters[char] = {
       strokes: strokes,
       bounds: bounds,
       baseline: baseline || 0,
       metrics: metrics || null,
+      connectors: connectors || null,
       timestamp: new Date().toISOString(),
     };
     this.metadata.modified = new Date().toISOString();

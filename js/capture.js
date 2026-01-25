@@ -436,12 +436,21 @@ function saveCurrentCharacter() {
     points: StrokeProcessor.simplifyStroke(stroke.points, 2),
   }));
 
+  // Precompute normalized connectors for cursive joining
+  const normalizedForConnectors = StrokeProcessor.normalize(
+    simplifiedStrokes,
+    bounds,
+    metrics,
+  );
+  const connectors = StrokeProcessor.extractConnectors(normalizedForConnectors);
+
   fontData.setCharacter(
     currentChar,
     simplifiedStrokes,
     bounds,
     baseline,
     metrics,
+    connectors,
   );
   fontData.saveToLocalStorage();
 
