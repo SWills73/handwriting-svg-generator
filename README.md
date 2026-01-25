@@ -49,7 +49,7 @@ Convert your handwriting into editable SVG graphics! This tool captures your nat
 ### Capturing smoother cursive joins
 - Keep entry strokes consistent: begin each letter with a small lead-in that starts near the x-height for predictable connection points.
 - Finish the exit stroke: let the pen travel to (or slightly below) the baseline before lifting so exits align with the next letter.
-- Re-record tricky pairs when needed (e.g., **o→r**, **b→r**, **s→t**): draw a variant of the first letter with a longer exit tail and save it over that letter if you prefer stronger joins.
+- Re-record tricky pairs when needed (e.g., **o→r**, **b→r**, **s→t**): draw a variant of the first letter with a longer exit tail, export a backup JSON first, then save the variant if you prefer stronger joins.
 - Stay on the guides: use the built-in ascender/x-height/baseline/descender lines to keep connectors aligned across letters.
 
 ## 📁 Project Structure

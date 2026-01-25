@@ -236,7 +236,7 @@ class StrokeProcessor {
    * Extract entry/exit connector points for cursive joining.
    * Strokes should already be normalized to 0-1 space.
    * @param {Array} strokes - Normalized strokes
-   * @returns {Object|null} {entry:{x,y}, exit:{x,y}, width}
+   * @returns {Object|null} {entry:{x,y}, exit:{x,y}, width} (width is glyph width in normalized units)
    */
   static extractConnectors(strokes) {
     if (!strokes || strokes.length === 0) return null;
