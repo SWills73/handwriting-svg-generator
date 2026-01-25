@@ -201,8 +201,7 @@ function renderLine(text, startX, startY) {
   for (let i = 0; i < text.length; ) {
     const pairKey = text.slice(i, i + 2);
     const singleKey = text[i];
-    const usePair =
-      pairKey.length === 2 && fontData.hasCharacter && fontData.hasCharacter(pairKey);
+    const usePair = i + 1 < text.length && fontData.hasCharacter(pairKey);
     const glyphKey = usePair ? pairKey : singleKey;
     const step = usePair ? 2 : 1;
 
