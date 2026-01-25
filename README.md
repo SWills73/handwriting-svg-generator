@@ -149,6 +149,7 @@ This is a vanilla HTML/CSS/JavaScript project with no build step or dependencies
 - **New Characters**: Modify `CHAR_SET` in `capture.js` and update `FontData.getStandardCharacterSet()` in `font-data.js`
 - **Styling**: Edit `css/styles.css` for visual changes
 - **Stroke Processing**: Extend `StrokeProcessor` class for new algorithms
+- **Letter Pairs**: Key ligature pairs (e.g., `th`, `ch`, `sh`) can be captured directly in `capture.html` by entering two-letter combinations; renderer will use the pair glyph when available for smoother joins.
 
 ## 📝 Browser Compatibility
 

@@ -14,14 +14,14 @@ class FontData {
   }
 
   /**
-   * Add or update character data
-   * @param {string} char - The character (single character)
+   * Add or update character or pair data
+   * @param {string} char - The character or pair key (1-2 chars)
    * @param {Array} strokes - Array of stroke objects
    * @param {Object} bounds - Bounding box {minX, minY, maxX, maxY, width, height}
    * @param {number} baseline - Baseline position
    * @param {Object} [metrics] - Optional capture metrics (ascender, descender, xHeight, emHeight, captureWidth)
    */
-   setCharacter(char, strokes, bounds, baseline, metrics, connectors) {
+  setCharacter(char, strokes, bounds, baseline, metrics, connectors) {
     this.characters[char] = {
       strokes: strokes,
       bounds: bounds,

@@ -23,8 +23,9 @@ const GUIDELINE_METRICS = {
   descender: 0.82, // bottom of descenders
 };
 
-// Character set
+// Character + pair set
 const CHAR_SET = [];
+const PAIR_SET = ["th", "ch", "sh", "wh", "ph", "qu", "oo", "ee", "ll", "tt"];
 
 // Initialize character set
 function initCharacterSet() {
@@ -42,6 +43,9 @@ function initCharacterSet() {
   }
   // Common punctuation
   CHAR_SET.push(" ", ".", ",", "!", "?", ";", ":", "-", "(", ")", '"', "'");
+
+  // Key letter pairs for smoother ligatures
+  CHAR_SET.push(...PAIR_SET);
 }
 
 // p5.js setup
@@ -361,7 +365,9 @@ function setupUI() {
   document.getElementById("charInput").value = currentChar;
   document.getElementById("charInput").addEventListener("input", (e) => {
     if (e.target.value.length > 0) {
-      loadCharacter(e.target.value[0]);
+      const value = e.target.value.slice(0, 2);
+      e.target.value = value;
+      loadCharacter(value);
     }
   });
 
