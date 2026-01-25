@@ -270,14 +270,12 @@ function renderLine(text, startX, startY) {
       const exitAbsY = yOffset + connector.exit.y * config.fontSize;
       // Approximate stroke width from first stroke for consistency
       const firstStroke = variedStrokes[0];
-      const denom = firstStroke?.points?.length || 1;
+      const pointCount = firstStroke?.points?.length || 1;
       const avgPressure =
-        denom > 0
-          ? firstStroke.points.reduce((sum, p) => sum + (p.pressure || 0.5), 0) /
-            denom
-          : 0.5;
+        firstStroke.points.reduce((sum, p) => sum + (p.pressure || 0.5), 0) /
+        pointCount;
       const strokeWidth = StrokeProcessor.mapPressureToWidth(
-        avgPressure || 0.5,
+        avgPressure,
         MIN_STROKE_WIDTH,
         MAX_STROKE_WIDTH,
       );
@@ -298,7 +296,7 @@ function renderLine(text, startX, startY) {
   };
 }
 
-function renderCharacter(strokes, x, baselineY, size, charData, prevConnector) {
+function renderCharacter(strokes, x, baselineY, size, charData) {
   const baselineNorm = getBaselineNorm(charData);
   const yOffset = baselineY - baselineNorm * size;
 
