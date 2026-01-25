@@ -234,6 +234,19 @@ function renderLine(text, startX, startY) {
       variationConfig,
     );
 
+    const baselineNorm = getBaselineNorm(charData);
+    const yOffset = startY - baselineNorm * config.fontSize;
+
+    // If cursive is enabled and we have a previous connector, draw a joining line in absolute space
+    if (config.connectCursive && prevConnector) {
+      const entry = StrokeProcessor.extractConnectors(variedStrokes)?.entry;
+      if (entry) {
+        const startAbsX = xPosition + entry.x * config.fontSize;
+        const startAbsY = yOffset + entry.y * config.fontSize;
+        svgContent += `  <path d="M ${prevConnector.exitAbsX.toFixed(2)} ${prevConnector.exitAbsY.toFixed(2)} L ${startAbsX.toFixed(2)} ${startAbsY.toFixed(2)}" fill="none" stroke="${config.strokeColor}" stroke-width="${prevConnector.strokeWidth.toFixed(2)}" stroke-linecap="round" stroke-linejoin="round"/>\n`;
+      }
+    }
+
     // Render character
     const charSVG = renderCharacter(
       variedStrokes,
@@ -249,8 +262,21 @@ function renderLine(text, startX, startY) {
     const normalizedBounds = StrokeProcessor.calculateBounds(variedStrokes);
     const normalizedWidth = normalizedBounds.width || 0.6; // fallback
     const charWidth = normalizedWidth * config.fontSize;
-    // Update connector info for next glyph
-    prevConnector = StrokeProcessor.extractConnectors(variedStrokes);
+    // Update connector info for next glyph (store absolute exit position)
+    const connector = StrokeProcessor.extractConnectors(variedStrokes);
+    if (connector) {
+      const exitAbsX = xPosition + connector.exit.x * config.fontSize;
+      const exitAbsY = yOffset + connector.exit.y * config.fontSize;
+      // Approximate stroke width from first stroke for consistency
+      const firstStroke = variedStrokes[0];
+      const avgPressure =
+        firstStroke?.points?.reduce((sum, p) => sum + (p.pressure || 0.5), 0) /
+        (firstStroke?.points?.length || 1);
+      const strokeWidth = StrokeProcessor.mapPressureToWidth(avgPressure || 0.5, 1.5, 3);
+      prevConnector = { ...connector, exitAbsX, exitAbsY, strokeWidth };
+    } else {
+      prevConnector = null;
+    }
     xPosition += charWidth + config.letterSpacing;
   }
 
@@ -272,7 +298,7 @@ function renderCharacter(strokes, x, baselineY, size, charData, prevConnector) {
 
   // Generate paths with pressure-based width
   // Strokes are already normalized to 0-1 range
-  strokes.forEach((stroke, index) => {
+  strokes.forEach((stroke) => {
     if (!stroke.points || stroke.points.length < 2) return;
 
     // Calculate average pressure
@@ -283,19 +309,6 @@ function renderCharacter(strokes, x, baselineY, size, charData, prevConnector) {
 
     // Generate path data (normalized coordinates scaled by size)
     const pathData = generatePathData(stroke.points, size);
-
-    // If cursive is enabled and we have a previous connector, draw a joining line
-    if (config.connectCursive && prevConnector && index === 0) {
-      const startPoint = stroke.points[0];
-      const joinPath = `M ${(prevConnector.exit.x * size).toFixed(
-        2,
-      )} ${(prevConnector.exit.y * size + (baselineY - yOffset)).toFixed(
-        2,
-      )} L ${(startPoint.x * size).toFixed(2)} ${(startPoint.y * size).toFixed(
-        2,
-      )}`;
-      svg += `    <path d="${joinPath}" fill="none" stroke="${config.strokeColor}" stroke-width="${strokeWidth.toFixed(2)}" stroke-linecap="round" stroke-linejoin="round"/>\n`;
-    }
 
     svg += `    <path d="${pathData}" fill="none" stroke="${config.strokeColor}" stroke-width="${strokeWidth.toFixed(2)}" stroke-linecap="round" stroke-linejoin="round"/>\n`;
   });
