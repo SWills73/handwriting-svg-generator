@@ -16,8 +16,8 @@ let canvasHeight = 350;
 
 // Guideline metrics (ascender through descender) to preserve relative scale
 const GUIDELINE_METRICS = {
-  ascender: 0.12, // top of ascenders
-  capHeight: 0.2, // capital letter height
+  ascender: 0.18, // top of ascenders
+  capHeight: 0.24, // capital letter height
   xHeight: 0.46, // typical lowercase height
   baseline: 0.66, // writing baseline
   descender: 0.82, // bottom of descenders
@@ -25,7 +25,21 @@ const GUIDELINE_METRICS = {
 
 // Character + pair set
 const CHAR_SET = [];
-const PAIR_SET = ["th", "ch", "sh", "wh", "ph", "qu", "oo", "ee", "ll", "tt"];
+const PAIR_SET = [
+  "th",
+  "ch",
+  "sh",
+  "wh",
+  "ph",
+  "qu",
+  "oo",
+  "ee",
+  "ll",
+  "tt",
+  "or",
+  "br",
+  "st",
+];
 
 // Initialize character set
 function initCharacterSet() {
